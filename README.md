@@ -17,6 +17,8 @@ GPT回复：[任何文本]
 
 下载本项目
 
+下载[NapCatQQ](https://github.com/NapNeko/NapCatQQ)
+
 ...
 
 ## 使用步骤
@@ -25,10 +27,8 @@ GPT回复：[任何文本]
 
 # 文件来源
 
-NapCatQQ：[NapCatQQ](https://github.com/NapNeko/NapCatQQ)
+src/GPT/GPT.go：[NapCatQQreply](https://github.com/OIerNekoPass/gobot_gpt_api)/gpt_chat.go
 
-src/GPT/GPT.go：[NapCatQQreply](https://github.com/OIerNekoPass/gobot_gpt_api)/gpt_chat.go 改
+src/qq_reply/qq_reply.go：[NapCatQQreply](https://github.com/OIerNekoPass/NapCatQQreply)/qq_reply.go
 
-src/qq_reply/qq_reply.go：[NapCatQQreply](https://github.com/OIerNekoPass/NapCatQQreply)/qq_reply.go 改
-
-src/QQbot.go：未公开
+src/QQbot.go：？
