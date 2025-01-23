@@ -1,8 +1,5 @@
 # NapCatQQbot
 
-NapCatQQ：[NapCatQQ](https://github.com/NapNeko/NapCatQQ)
-
-原项目：[NapCatQQreply](https://github.com/OIerNekoPass/NapCatQQreply)
 
 # 可用功能
 
@@ -25,3 +22,13 @@ GPT回复：[任何文本]
 ## 使用步骤
 
 ...
+
+# 文件来源
+
+NapCatQQ：[NapCatQQ](https://github.com/NapNeko/NapCatQQ)
+
+src/GPT/GPT.go：[NapCatQQreply](https://github.com/OIerNekoPass/gobot_gpt_api)/gpt_chat.go 改
+
+src/qq_reply/qq_reply.go：[NapCatQQreply](https://github.com/OIerNekoPass/NapCatQQreply)/qq_reply.go 改
+
+src/QQbot.go：未公开
