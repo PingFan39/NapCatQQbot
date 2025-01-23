@@ -1,0 +1,9 @@
+01-23 15:02:52 [info] [NapCat] [Core] NapCat.Core Version: 4.4.4
+01-23 15:02:52 [info] 核心登录服务连接成功!
+01-23 15:02:52 [info] 正在快速登录  3962869650
+01-23 15:02:52 [info] [NapCat] [WebUi] WebUi Local Panel Url: http://127.0.0.1:6099/webui?token=2yqxxw8oe5w
+01-23 15:02:52 [info] [NapCat] [WebUi] WebUi Local Panel Url: https://napcat.152710.xyz/web_login?back=http://127.0.0.1:6099&token=2yqxxw8oe5w
+01-23 15:02:54 [debug] 本账号数据/缓存目录： G:\QQFile\NapCat\data
+01-23 15:02:54 [debug] [Core] [Config] 配置文件C:\Users\PingFan\Desktop\QQbot\NapCatQQ\config\napcat_3962869650.json加载 {"fileLog":false,"consoleLog":true,"fileLogLevel":"debug","consoleLogLevel":"info","packetBackend":"auto","packetServer":""}
+01-23 15:02:54 [warn] [Core] [Packet] wsPacketClient 未配置服务器地址
+01-23 15:02:54 [info] [Core] [Packet] 自动选择 NativePacketClient 作为后端
