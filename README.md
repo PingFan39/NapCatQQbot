@@ -20,11 +20,11 @@ GPT对话：`@[你的QQbot] [任何不符合下面所有格式的文本]`
 
 0. 前期准备
 
-- API-Key (重要！这可能是所有步骤中最难的一步)
+    - API-Key (重要！这可能是所有步骤中最难的一步)
 
-- bot的QQ
+    - bot的QQ
 
-- 能运行go的环境
+    - 能运行go的环境
 
 1. 下载本项目
 
@@ -93,17 +93,9 @@ powershell -ExecutionPolicy ByPass -File ./install.ps1 -verb runas
 
 ## 日常使用
 
-- 打开终端，工作目录为NapCatQQ的文件夹，执行以下命令：
+- 打开终端，工作目录为NapCatQQ的文件夹，执行命令：`./launcher.bat [bot的QQ号]`
 
-```
-./launcher.bat [bot的QQ号]
-```
-
-- 打开终端，工作目录为本项目文件夹，执行以下命令：
-
-```
-go run main.go
-```
+- 打开终端，工作目录为本项目文件夹，执行命令：`go run main.go`
 
 # 文件来源
 
