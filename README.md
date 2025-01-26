@@ -30,7 +30,7 @@ GPT对话：`@[你的QQbot] [任何不符合下面所有格式的文本]`
 
 2. 下载[NapCatQQ](https://github.com/NapNeko/NapCatQQ)（不用点进去）
 
-- 打开终端，工作目录为本项目文件夹，执行以下命令（执行后可能要等一会）：
+    - 打开终端，工作目录为本项目文件夹，执行以下命令（执行后可能要等一会）：
 
 ```
 curl -o install.ps1 https://nclatest.znin.net/NapNeko/NapCat-Installer/main/script/install.ps1
@@ -43,9 +43,9 @@ powershell -ExecutionPolicy ByPass -File ./install.ps1 -verb runas
 ./launcher.bat [bot的QQ号]
 ```
 
-- 按提示操作，直到没得操作
+    - 按提示操作，直到没得操作
 
-- 做完第4步前别关
+    - 做完第4步前别关
 
 4. 进行网络配置
 
