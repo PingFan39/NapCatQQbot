@@ -37,11 +37,7 @@ curl -o install.ps1 https://nclatest.znin.net/NapNeko/NapCat-Installer/main/scri
 powershell -ExecutionPolicy ByPass -File ./install.ps1 -verb runas
 ```
 
-3. 打开终端，工作目录为NapCatQQ的文件夹，执行以下命令：
-
-```
-./launcher.bat [bot的QQ号]
-```
+3. 打开终端，工作目录为NapCatQQ的文件夹，执行命令：`./launcher.bat [bot的QQ号]`
 
     - 按提示操作，直到没得操作
 
@@ -81,7 +77,7 @@ powershell -ExecutionPolicy ByPass -File ./install.ps1 -verb runas
 
         - 启用：开启
 
-        - URL：http://localhost:[1024~49151中任意值，不能和server_port一样（记为client_port）]
+        - URL：`http://localhost:`[1024~49151中任意值，不能和server_port一样（记为client_port）]
 
         - 消息格式：String
 
