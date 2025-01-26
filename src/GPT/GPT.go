@@ -11,61 +11,66 @@ import (
 var gpt_url string
 var gpt_model string
 var gpt_api_key string
-var gpt_initial_promt string
+var gpt_ini_promt string
 
-type gpt_msg struct {
-	Role    string `json:"role"`
-	Content string `json:"content"`
+type t_msg struct {
+	Role string `json:"role"`
+	Text string `json:"content"`
 }
 
-type chat_session struct {
-	Model    string    `json:"model"`
-	Messages []gpt_msg `json:"messages"`
-}
-
-type gpt_reply struct {
-	Index   int     `json:"index"`
-	Message gpt_msg `json:"message"`
-}
-
-type token_use struct {
-	Prompt_use int `json:"prompt_tokens"`
-	Reply_use  int `json:"completion_tokens"`
-	Total_use  int `json:"total_tokens"`
-}
-
-type http_reply struct {
-	Choices []gpt_reply `json:"choices"`
-	Usage   token_use   `json:"usage"`
-}
-
-func New_GPTmsg(mrole string, mcontent string) gpt_msg {
-	return gpt_msg{
-		Role:    mrole,
-		Content: mcontent,
+func new_t_msg(role string, content string) t_msg {
+	return t_msg{
+		Role: role,
+		Text: content,
 	}
 }
 
-func NewGPTChat() chat_session {
-	return chat_session{
-		Model: gpt_model, // 如果是openai则改为想用的模型如gpt-4o gpt-4o-mini
-		Messages: []gpt_msg{
+type t_chat struct {
+	Model string  `json:"model"`
+	Msgs  []t_msg `json:"messages"`
+}
+
+func new_t_chat() t_chat {
+	return t_chat{
+		Model: gpt_model,
+		Msgs: []t_msg{
 			{
-				Role:    "system",
-				Content: gpt_initial_promt,
+				Role: "system",
+				Text: gpt_ini_promt,
 			},
 		},
 	}
 }
 
-func send2gpt(payload *strings.Reader) string {
+type t_reply struct {
+	Index int   `json:"index"`
+	Msg   t_msg `json:"message"`
+}
+
+type t_token_msg struct {
+	Prompt_use int `json:"prompt_tokens"`
+	Reply_use  int `json:"completion_tokens"`
+	Total_use  int `json:"total_tokens"`
+}
+
+type t_http_reply struct {
+	Choices []t_reply   `json:"choices"`
+	Usage   t_token_msg `json:"usage"`
+}
+
+var err_msg t_msg = t_msg{
+	Role: "system",
+	Text: "出错了喵",
+}
+
+func send2gpt(payload *strings.Reader) t_msg {
 	client := &http.Client{}
 
 	req, err := http.NewRequest("POST", gpt_url, payload)
 
 	if err != nil {
 		fmt.Println(err)
-		return "出错了喵"
+		return err_msg
 	}
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Authorization", gpt_api_key)
@@ -73,40 +78,59 @@ func send2gpt(payload *strings.Reader) string {
 	res, err := client.Do(req)
 	if err != nil {
 		fmt.Println(err)
-		return "出错了喵"
+		return err_msg
 	}
 	defer res.Body.Close()
 
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		fmt.Println(err)
-		return "出错了喵"
+		return err_msg
 	}
 
-	var reply http_reply
+	var reply t_http_reply
 	json.Unmarshal(body, &reply)
 
 	//fmt.Println(string(body))
 	fmt.Println("token use:", reply.Usage.Total_use)
-	return reply.Choices[0].Message.Content // 默认采用第一个回复
+	return reply.Choices[0].Msg
 }
 
-func AIreply(question string) string { // 创建一个新对话并返回gpt的回答
-	gpt_session := NewGPTChat()
-	msg := New_GPTmsg("user", question)
-	gpt_session.Messages = append(gpt_session.Messages, msg)
+var gpt_chat = new_t_chat()
 
-	jsonData, err := json.Marshal(gpt_session)
+func gpt_reply() t_msg {
+	{
+		p_text := &gpt_chat.Msgs[len(gpt_chat.Msgs)-1].Text
+		text := *p_text
+		if text == "帮助" || text == "help" || len(text) == 0 {
+			*p_text = "不需要多余文字，请介绍自己并用自己的话附上以下内容：如需要任何帮助，请跳转到https://github.com/PingFan39/NapCatQQbot"
+		}
+	}
+
+	jsonData, err := json.Marshal(gpt_chat)
 
 	if err != nil {
 		fmt.Println("json load failed", err)
-		return "出错了喵"
+		return err_msg
 	}
 
 	//fmt.Println(string(jsonData))
 	payload := strings.NewReader(string(jsonData))
 
-	return send2gpt(payload)
+	reply := send2gpt(payload)
+	gpt_chat.Msgs = append(gpt_chat.Msgs, reply)
+	return reply
+}
+
+func New_chat(q string) string {
+	gpt_chat = new_t_chat()
+	gpt_chat.Msgs = append(gpt_chat.Msgs, new_t_msg("user", q))
+	return gpt_reply().Text
+}
+
+func Chat(q string) string {
+	gpt_chat.Msgs = append(gpt_chat.Msgs, new_t_msg("user", q))
+	return gpt_reply().Text
 }
 
 func Set_url(url string) {
@@ -122,5 +146,5 @@ func Set_APIkey(APIkey string) {
 }
 
 func Set_initial_promt(initial_promt string) {
-	gpt_initial_promt = initial_promt
+	gpt_ini_promt = initial_promt
 }

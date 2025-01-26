@@ -32,39 +32,32 @@ type group_msg struct {
 	CQ_text  string `json:"raw_message"`
 }
 
-func reduce_pre_sp(msg string, pre string) string {
-	msg = msg[len(pre):]
-	msg = strings.TrimLeft(msg, " ")
-	return msg
+func has_pres(p_text *string, pres string) bool {
+	text := *p_text
+	if strings.HasPrefix(text, pres) {
+		text = text[len(pres):]
+		text = strings.TrimLeft(text, " ")
+		*p_text = text
+		return true
+	}
+	return false
 }
 
 var at_botQQ string
 
 func group_handler(msg *group_msg) {
-	if strings.HasPrefix(msg.CQ_text, at_botQQ) { //@自己的
-		group_id := strconv.Itoa(msg.Group_id)
-		text := reduce_pre_sp(msg.CQ_text, at_botQQ)
-
-		if len(text) == 0 {
-			qq_reply.Reply_text(group_id, "什么事喵？")
-			return
+	id := strconv.Itoa(msg.Group_id)
+	text := msg.CQ_text
+	if has_pres(&text, at_botQQ) { //@自己的
+		var reply string
+		if has_pres(&text, "还有一件事，") || has_pres(&text, "还有一件事") {
+			fmt.Println("追问：" + text)
+			reply = GPT.Chat(text)
+		} else {
+			fmt.Println("首问：" + text)
+			reply = GPT.New_chat(text)
 		}
 
-		if text == "miku" {
-			//之后再写
-		}
-
-		// if rest_msg == "今日运势" || rest_msg == "y" {
-		// 	fmt.Println(work_dir+"/luck_files/back/", work_dir+"/luck_files/front/", work_dir+"/luck_files/cute.ttf", work_dir+"/luck_files/luck_pics/")
-		// 	uid := msg.Sender.QQ
-		// 	luck.Gen_Pic(int64(uid), work_dir+"/luck_files/back/", work_dir+"/luck_files/front/", work_dir+"/luck_files/cute.ttf", work_dir+"/luck_files/luck_pics/")
-		// 	qq_reply.Luck_reply(strconv.Itoa(msg.Group_id), strconv.Itoa(uid), work_dir+"/luck_files/luck_pics/"+strconv.Itoa(uid)+".png")
-		// 	return
-		// }
-
-		//text = reduce_pre_sp(text, "那我问你 ")
-		fmt.Println("问题：" + text)
-		reply := GPT.AIreply(text)
 		fmt.Println("回答：" + reply)
 		reply_len := len(reply)
 		max_len := 3000
@@ -73,7 +66,7 @@ func group_handler(msg *group_msg) {
 			reply = reply[0:max_len-len(end)] + end
 		}
 
-		qq_reply.Reply_text(group_id, reply)
+		qq_reply.Reply_text(id, reply)
 	}
 }
 
