@@ -14,5 +14,8 @@ func main() {
 	src.Set_client_port("")                                             //记下的client_port（客户端端口）
 	src.Set_botQQ("")                                                   //bot的QQ号
 	src.Set_token("")                                                   //记下的token
+
+	src.Rand_pic_text = "" //触发发送随机图片的文字
+	src.Rand_pic_dir = ""  //随机图片路径
 	src.Main()
 }

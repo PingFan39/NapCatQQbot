@@ -6,10 +6,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"math/rand"
 	"net/http"
 	"os"
 	"strconv"
 	"strings"
+	"time"
 )
 
 var work_dir string
@@ -45,12 +47,26 @@ func has_pres(p_text *string, pres string) bool {
 
 var at_botQQ string
 
+var Rand_pic_text string
+var Rand_pic_dir string
+
 func group_handler(msg *group_msg) {
 	id := strconv.Itoa(msg.Group_id)
 	text := msg.CQ_text
 	if has_pres(&text, at_botQQ) { //@自己的
+		if text == Rand_pic_text {
+			file_names, err := os.ReadDir(Rand_pic_dir)
+			if err != nil {
+				fmt.Println("路径有问题喵:", err)
+				return
+			}
+			qq_reply.Reply_picture(
+				id,
+				Rand_pic_dir+file_names[rand.New(rand.NewSource(time.Now().UnixNano())).Intn(len(file_names))].Name())
+			return
+		}
 		var reply string
-		if has_pres(&text, "还有一件事，") || has_pres(&text, "还有一件事") {
+		if has_pres(&text, "还有一件事") {
 			fmt.Println("追问：" + text)
 			reply = GPT.Chat(text)
 		} else {

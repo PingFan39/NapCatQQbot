@@ -53,20 +53,14 @@ func Reply_text(group_id string, text string) {
 	send_payload(payload)
 }
 
-func Reply_picture(group_id string, user_id string, pic_route string) {
+func Reply_picture(group_id string, dir string) {
 	payload := strings.NewReader(`{
 	"group_id": "` + group_id + `",
 	"message": [
 		{
-			"type": "at",
-			"data": {
-				"qq": "` + user_id + `"
-			}
-		},
-		{
 			"type": "image",
 			"data": {
-				"file": "` + pic_route + `"
+				"file": "` + dir + `"
 			}
 		}
 	]
@@ -98,3 +92,10 @@ func Set_url(ip string, port string) {
 func Set_token(token string) {
 	bot_token = token
 }
+
+/*		{
+		"type": "at",
+		"data": {
+			"qq": "` + user_id + `"
+		}
+	},*/
