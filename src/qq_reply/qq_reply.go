@@ -1,8 +1,9 @@
 package qq_reply
 
 import (
+	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strings"
 )
@@ -28,7 +29,7 @@ func send_payload(payload *strings.Reader) {
 	}
 	defer res.Body.Close()
 
-	body, err := ioutil.ReadAll(res.Body)
+	body, err := io.ReadAll(res.Body)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -37,14 +38,18 @@ func send_payload(payload *strings.Reader) {
 }
 
 func Reply_text(group_id string, text string) {
-	text = strings.ReplaceAll(text, "\n", `\n`)
+	_, err := json.Marshal(text)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 	payload := strings.NewReader(`{
 	"group_id": "` + group_id + `",
 	"message": [
 		{
 			"type": "text",
 			"data": {
-				"text": "` + text + `"
+				"text": ` + text + `
 			}
 		}
 	]
