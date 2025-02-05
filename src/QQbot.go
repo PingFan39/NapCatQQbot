@@ -66,7 +66,7 @@ func group_handler(msg *group_msg) {
 			return
 		}
 		var reply string
-		if has_pres(&text, "还有一件事") {
+		if has_pres(&text, "，") {
 			fmt.Println("追问：" + text)
 			reply = GPT.Chat(text)
 		} else {

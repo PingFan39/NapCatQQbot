@@ -38,7 +38,7 @@ func send_payload(payload *strings.Reader) {
 }
 
 func Reply_text(group_id string, text string) {
-	_, err := json.Marshal(text)
+	s, err := json.Marshal(text)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -49,7 +49,7 @@ func Reply_text(group_id string, text string) {
 		{
 			"type": "text",
 			"data": {
-				"text": ` + text + `
+				"text": ` + string(s) + `
 			}
 		}
 	]
