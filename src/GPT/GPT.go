@@ -1,150 +1,32 @@
 package GPT
 
 import (
-	"encoding/json"
-	"fmt"
-	"io/ioutil"
-	"net/http"
-	"strings"
+	"QQbot/src/GPT/gemini"
+	"QQbot/src/GPT/openai"
 )
 
-var gpt_url string
-var gpt_model string
-var gpt_api_key string
-var gpt_ini_promt string
+var Is_OpenAI_format bool
+var Is_gemini_format bool
 
-type t_msg struct {
-	Role string `json:"role"`
-	Text string `json:"content"`
-}
-
-func new_t_msg(role string, content string) t_msg {
-	return t_msg{
-		Role: role,
-		Text: content,
+func preprocess(p_text *string) {
+	text := *p_text
+	if text == "帮助" || text == "help" || len(text) == 0 {
+		*p_text = "不需要多余文字，请介绍自己并用自己的话附上以下内容：如需要任何帮助，请跳转到https://github.com/PingFan39/NapCatQQbot"
 	}
 }
 
-type t_chat struct {
-	Model string  `json:"model"`
-	Msgs  []t_msg `json:"messages"`
-}
-
-func new_t_chat() t_chat {
-	return t_chat{
-		Model: gpt_model,
-		Msgs: []t_msg{
-			{
-				Role: "system",
-				Text: gpt_ini_promt,
-			},
-		},
+func Chat(text string) string {
+	preprocess(&text)
+	if Is_OpenAI_format {
+		return openai.Chat(text)
 	}
+	return gemini.Chat(text)
 }
 
-type t_reply struct {
-	Index int   `json:"index"`
-	Msg   t_msg `json:"message"`
-}
-
-type t_token_msg struct {
-	Prompt_use int `json:"prompt_tokens"`
-	Reply_use  int `json:"completion_tokens"`
-	Total_use  int `json:"total_tokens"`
-}
-
-type t_http_reply struct {
-	Choices []t_reply   `json:"choices"`
-	Usage   t_token_msg `json:"usage"`
-}
-
-var err_msg t_msg = t_msg{
-	Role: "system",
-	Text: "出错了喵",
-}
-
-func send2gpt(payload *strings.Reader) t_msg {
-	client := &http.Client{}
-
-	req, err := http.NewRequest("POST", gpt_url, payload)
-
-	if err != nil {
-		fmt.Println(err)
-		return err_msg
+func New_chat(text string) string {
+	preprocess(&text)
+	if Is_OpenAI_format {
+		return openai.New_chat(text)
 	}
-	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("Authorization", gpt_api_key)
-
-	res, err := client.Do(req)
-	if err != nil {
-		fmt.Println(err)
-		return err_msg
-	}
-	defer res.Body.Close()
-
-	body, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		fmt.Println(err)
-		return err_msg
-	}
-
-	var reply t_http_reply
-	json.Unmarshal(body, &reply)
-
-	//fmt.Println(string(body))
-	fmt.Println("token use:", reply.Usage.Total_use)
-	return reply.Choices[0].Msg
-}
-
-var gpt_chat = new_t_chat()
-
-func gpt_reply() t_msg {
-	{
-		p_text := &gpt_chat.Msgs[len(gpt_chat.Msgs)-1].Text
-		text := *p_text
-		if text == "帮助" || text == "help" || len(text) == 0 {
-			*p_text = "不需要多余文字，请介绍自己并用自己的话附上以下内容：如需要任何帮助，请跳转到https://github.com/PingFan39/NapCatQQbot"
-		}
-	}
-
-	jsonData, err := json.Marshal(gpt_chat)
-
-	if err != nil {
-		fmt.Println("json load failed", err)
-		return err_msg
-	}
-
-	//fmt.Println(string(jsonData))
-	payload := strings.NewReader(string(jsonData))
-
-	reply := send2gpt(payload)
-	gpt_chat.Msgs = append(gpt_chat.Msgs, reply)
-	return reply
-}
-
-func New_chat(q string) string {
-	gpt_chat = new_t_chat()
-	gpt_chat.Msgs = append(gpt_chat.Msgs, new_t_msg("user", q))
-	return gpt_reply().Text
-}
-
-func Chat(q string) string {
-	gpt_chat.Msgs = append(gpt_chat.Msgs, new_t_msg("user", q))
-	return gpt_reply().Text
-}
-
-func Set_url(url string) {
-	gpt_url = url
-}
-
-func Set_model(model string) {
-	gpt_model = model
-}
-
-func Set_APIkey(APIkey string) {
-	gpt_api_key = APIkey
-}
-
-func Set_initial_promt(initial_promt string) {
-	gpt_ini_promt = initial_promt
+	return gemini.New_chat(text)
 }

@@ -2,6 +2,8 @@ package src
 
 import (
 	"QQbot/src/GPT"
+	"QQbot/src/GPT/gemini"
+	"QQbot/src/GPT/openai"
 	"QQbot/src/qq_reply"
 	"encoding/json"
 	"fmt"
@@ -117,8 +119,27 @@ var server_ip string
 var server_port string
 var client_port string
 
+var gpt_url string
+var gpt_model string
+var gpt_APIkey string
+var gpt_ini_promt string
+
 func Main() {
+
 	qq_reply.Set_url(server_ip, server_port)
+
+	if strings.Contains(gpt_url, "openai") {
+		openai.Set_url(gpt_url)
+		openai.Set_model(gpt_model)
+		openai.Set_APIkey(gpt_APIkey)
+		openai.Set_initial_promt(gpt_ini_promt)
+		GPT.Is_OpenAI_format = true
+	}
+	if strings.Contains(gpt_url, "googleapis") {
+		gemini.Set_url(gpt_url)
+		gemini.Set_initial_promt(gpt_ini_promt)
+		GPT.Is_gemini_format = true
+	}
 
 	var err error
 	work_dir, err = os.Getwd()
@@ -136,20 +157,20 @@ func Main() {
 	}
 }
 
-func Set_GPT_url(url string) {
-	GPT.Set_url(url)
+func Set_url(url string) {
+	gpt_url = url
 }
 
 func Set_model(model string) {
-	GPT.Set_model(model)
+	gpt_model = model
 }
 
 func Set_APIkey(APIkey string) {
-	GPT.Set_APIkey(APIkey)
+	gpt_APIkey = APIkey
 }
 
-func Set_initial_promt(initial_promt string) {
-	GPT.Set_initial_promt(initial_promt)
+func Set_ini_promt(initial_promt string) {
+	gpt_ini_promt = initial_promt
 }
 
 func Set_botQQ(qq string) {
