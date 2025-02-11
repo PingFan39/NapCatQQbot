@@ -101,7 +101,7 @@ powershell -ExecutionPolicy ByPass -File ./install.ps1 -verb runas
 
 # 文件来源
 
-src/GPT/GPT.go：[gobot_gpt_api](https://github.com/OIerNekoPass/gobot_gpt_api)/gpt_chat.go
+src/GPT/openai/openai.go：[gobot_gpt_api](https://github.com/OIerNekoPass/gobot_gpt_api)/gpt_chat.go
 
 src/qq_reply/qq_reply.go：[NapCatQQreply](https://github.com/OIerNekoPass/NapCatQQreply)/qq_reply.go
 
