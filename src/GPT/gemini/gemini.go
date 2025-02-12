@@ -35,11 +35,17 @@ func new_t_content(role string, content string) t_content {
 	}
 }
 
-type t_empty struct {
+/*type t_drc struct {
+	Mode string `json:"mode"`
+	Dt   string `json:"dynamicThreshold"`
+}*/
+
+type t_gsr struct {
+	//Drc t_drc `json:"dynamicRetrievalConfig"`
 }
 
 type t_tool struct {
-	Empty t_empty `json:"google_search"`
+	Gsr t_gsr `json:"googleSearch"` //Retrieval
 }
 
 type t_safety_rating struct {
@@ -72,7 +78,15 @@ func new_t_chat() t_chat {
 				},
 			},
 		},
-		Tools: []t_tool{},
+		Tools: []t_tool{{
+			Gsr: t_gsr{ /*
+					Drc: t_drc{
+						Mode: "MODE_DYNAMIC",
+						Dt:   "0.3",
+					},*/
+			},
+		},
+		},
 		SafetySettings: []t_safety_rating{ // 默认所有安全控制的级别都是不阻拦
 			{
 				Category:  "HARM_CATEGORY_HARASSMENT",
@@ -134,7 +148,7 @@ func send2gpt(payload *strings.Reader) string {
 	res, err := client.Do(req)
 	if err != nil {
 		fmt.Println(err)
-		return err_msg
+		return "服务器断联，请稍后再试喵"
 	}
 	defer res.Body.Close()
 
